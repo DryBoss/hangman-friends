@@ -2,11 +2,11 @@ import { useState } from "react";
 
 import styles from "./Create-game.module.css";
 
-function CreateGame() {
+function CreateGame({ setCurrentScreen, setGameData }) {
   const [turnDuration, setTurnDuration] = useState(30);
   const [gameEndPoint, setGameEndPoint] = useState(10);
 
-  const [players, setPlayers] = useState(["player 1", "player 2"]);
+  const [players, setPlayers] = useState(["player 1", "player 2", "player 3"]);
 
   const handlePlayerNameChange = (index, event) => {
     const newPlayers = [...players]; // Create a copy of the players array
@@ -50,6 +50,15 @@ function CreateGame() {
           Add Player
         </button>
       </div>
+      <button
+        className={styles.startGame}
+        onClick={() => {
+          setGameData([turnDuration, gameEndPoint, players]);
+          setCurrentScreen("Gameplay");
+        }}
+      >
+        Start Game
+      </button>
     </div>
   );
 }
