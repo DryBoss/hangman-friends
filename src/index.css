@@ -10,6 +10,11 @@
 input {
   outline: none;
   border: none;
+  font-family: "Press Start 2P", cursive;
+}
+
+button {
+  font-family: "Press Start 2P", cursive;
 }
 
 :root {

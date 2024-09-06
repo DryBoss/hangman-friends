@@ -20,3 +20,33 @@
   line-height: 2rem;
   cursor: pointer;
 }
+
+.players {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  p {
+    padding: 1rem;
+  }
+  button {
+    color: $text;
+    width: 75%;
+    padding: 0.75rem 2rem;
+    margin: 1rem;
+    font-size: 0.75rem;
+    border: 2px dashed $text;
+    border-radius: 1rem;
+    background-color: transparent;
+  }
+}
+.player {
+  color: $text;
+  text-align: center;
+  padding: 0.75rem 2rem;
+  margin: 0.5rem;
+  font-size: 0.75rem;
+  border: 2px solid $text;
+  border-radius: 1rem;
+  background-color: transparent;
+}

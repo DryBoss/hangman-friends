@@ -25,7 +25,18 @@ function CreateGame() {
         {gameEndPoint}{" "}
         <span onClick={() => setGameEndPoint(gameEndPoint + 1)}>+</span>
       </div>
-      <div className={styles.players}></div>
+      <div className={styles.players}>
+        <p>Players</p>
+        {players.map((playerName, index) => (
+          <input
+            key={index}
+            className={styles.player}
+            type="text"
+            value={playerName}
+          />
+        ))}
+        <button>Add Player</button>
+      </div>
     </div>
   );
 }
