@@ -1,0 +1,22 @@
+@import "./../colors";
+
+.createGame {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  height: 100vh;
+  background-color: $background;
+  h1 {
+    font-size: 1.25rem;
+    color: $brightest;
+    text-align: center;
+  }
+}
+
+.gameRange {
+  font-size: 0.75rem;
+  text-align: center;
+  line-height: 2rem;
+  cursor: pointer;
+}
