@@ -8,6 +8,12 @@ function CreateGame() {
 
   const [players, setPlayers] = useState(["player 1", "player 2"]);
 
+  const handlePlayerNameChange = (index, event) => {
+    const newPlayers = [...players]; // Create a copy of the players array
+    newPlayers[index] = event.target.value; // Update the player's name at the specified index
+    setPlayers(newPlayers); // Update the state with the new array
+  };
+
   return (
     <div className={styles.createGame}>
       <h1>Hangman friends</h1>
@@ -33,9 +39,16 @@ function CreateGame() {
             className={styles.player}
             type="text"
             value={playerName}
+            onChange={(e) => handlePlayerNameChange(index, e)}
           />
         ))}
-        <button>Add Player</button>
+        <button
+          onClick={() =>
+            setPlayers([...players, `player ${players.length + 1}`])
+          }
+        >
+          Add Player
+        </button>
       </div>
     </div>
   );
