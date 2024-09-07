@@ -26,7 +26,14 @@ function Gameplay({ gameData }) {
         setCurrentPlayer={setCurrentPlayer}
       />
     ) : (
-      <WordGuesser word={word} guessedLetters={guessedLetters} />
+      <WordGuesser
+        players={players}
+        currentPlayer={currentPlayer}
+        setCurrentPlayer={setCurrentPlayer}
+        word={word}
+        guessedLetters={guessedLetters}
+        turnDuration={turnDuration}
+      />
     )
   ) : (
     <ScoreBoard />

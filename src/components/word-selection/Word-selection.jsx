@@ -14,7 +14,11 @@ function WordSelection({
         type="text"
         onChange={(e) => setWord(e.target.value.toUpperCase().split(""))}
       />
-      <button onClick={() => setCurrentPlayer(currentPlayer + 1)}>
+      <button
+        onClick={() => {
+          setCurrentPlayer(currentPlayer + 1);
+        }}
+      >
         Select
       </button>
     </div>
