@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-import RunRound from "../run-round/runRound";
+import WordGuesser from "../word-guesser/word-guesser";
+import WordSelection from "../word-selection/Word-selection";
 import ScoreBoard from "../scoreboard/scoreboard";
 
 function Gameplay({ gameData }) {
@@ -8,14 +9,20 @@ function Gameplay({ gameData }) {
   const gameEndPoint = gameData[1];
   const players = gameData[2];
 
+  const [currentSelector, setCurrentSelector] = useState(players[0]);
+  const [currentPlayer, setCurrentPlayer] = useState(players[0]);
+
   const [score, setScore] = useState(Array(players.length).fill(0));
 
-  while (Math.max(...score) < gameEndPoint) {
-    for (let i = 0; i < players.length; i++) {
-      return <RunRound />;
-    }
-  }
-  return <ScoreBoard />;
+  return Math.max(...score) < gameEndPoint ? (
+    currentPlayer == currentSelector ? (
+      <WordSelection />
+    ) : (
+      <WordGuesser />
+    )
+  ) : (
+    <ScoreBoard />
+  );
 }
 
 export default Gameplay;
