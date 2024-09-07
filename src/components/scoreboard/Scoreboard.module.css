@@ -1,0 +1,11 @@
+.scoreboard {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  height: 100vh;
+  background-color: #0d0d0d;
+}
+.scoreboard h3 {
+  color: #9fa2a6;
+}

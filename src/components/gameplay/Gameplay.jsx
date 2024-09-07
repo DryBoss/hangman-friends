@@ -41,10 +41,12 @@ function Gameplay({ gameData }) {
         guessedLetters={guessedLetters}
         setGuessedLetters={setGuessedLetters}
         turnDuration={turnDuration}
+        score={score}
+        setScore={setScore}
       />
     )
   ) : (
-    <ScoreBoard />
+    <ScoreBoard players={players} score={score} />
   );
 }
 

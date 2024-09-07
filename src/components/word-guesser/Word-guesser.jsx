@@ -12,6 +12,8 @@ function WordGuesser({
   guessedLetters,
   setGuessedLetters,
   turnDuration,
+  score,
+  setScore,
 }) {
   let guessedLettersVar = [];
 
@@ -22,22 +24,6 @@ function WordGuesser({
   ];
 
   const [time, setTime] = useState(turnDuration);
-  useEffect(() => {
-    // Set up the interval
-    const timer = setInterval(() => {
-      setTime((prevTime) => {
-        if (prevTime <= 1) {
-          // Reset the timer
-          setCurrentPlayer((prevPlayer) => (prevPlayer + 1) % players.length);
-          setTime(turnDuration);
-        }
-        return prevTime - 1;
-      });
-    }, 1000);
-
-    // Clean up the interval on component unmount
-    return () => clearInterval(timer);
-  }, [currentPlayer, players.length, turnDuration]);
 
   function handleKeyClick(key) {
     if (!guessedLetters.includes(key)) {
@@ -45,6 +31,9 @@ function WordGuesser({
       guessedLettersVar = [...guessedLetters, key];
       if (word.includes(key)) {
         if (word.every((letter) => guessedLettersVar.includes(letter))) {
+          let newScore = score;
+          newScore[currentPlayer] += 1;
+          setScore(newScore);
           const newSelector = (currentSelector + 1) % players.length;
           setCurrentSelector(newSelector);
           setCurrentPlayer(newSelector);
@@ -59,6 +48,22 @@ function WordGuesser({
       }
     }
   }
+
+  // Timer logic
+  useEffect(() => {
+    if (time <= 0) {
+      // Handle the end of the timer
+      setCurrentPlayer((currentPlayer + 1) % players.length);
+      setTime(turnDuration); // Reset the timer
+      return;
+    }
+
+    const timer = setInterval(() => {
+      setTime((prevTime) => prevTime - 1);
+    }, 1000);
+
+    return () => clearInterval(timer); // Clean up the interval on unmount
+  }, [time, currentPlayer, setCurrentPlayer, turnDuration]);
 
   return (
     <div className={styles.wordGuesser}>
