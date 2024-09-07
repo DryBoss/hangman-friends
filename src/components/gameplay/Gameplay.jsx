@@ -1,8 +1,8 @@
 import { useState } from "react";
 
-import WordGuesser from "./../word-guesser/word-guesser";
+import WordGuesser from "./../word-guesser/Word-guesser";
 import WordSelection from "./../word-selection/Word-selection";
-import ScoreBoard from "./../scoreboard/scoreboard";
+import ScoreBoard from "./../scoreboard/Scoreboard";
 
 function Gameplay({ gameData }) {
   const turnDuration = gameData[0];
