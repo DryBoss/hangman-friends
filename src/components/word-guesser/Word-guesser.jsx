@@ -38,7 +38,9 @@ function WordGuesser({
           <div className={styles.keyRows} key={index}>
             {keysRow.map((key, index) => (
               <p
-                className={styles.key}
+                className={`${styles.key} ${
+                  word.includes(key) ? styles.yes : styles.no
+                }`}
                 key={index}
                 onClick={() => handleKeyClick({ key })}
               >

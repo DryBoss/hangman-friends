@@ -37,3 +37,11 @@
   border: 2px solid #9fa2a6;
   border-radius: 0.5rem;
 }
+
+.yes {
+  background-color: green;
+}
+
+.no {
+  background-color: red;
+}
