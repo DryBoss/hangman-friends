@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import WordGuesser from "../word-guesser/word-guesser";
 import WordSelection from "../word-selection/Word-selection";
@@ -9,16 +9,24 @@ function Gameplay({ gameData }) {
   const gameEndPoint = gameData[1];
   const players = gameData[2];
 
-  const [currentSelector, setCurrentSelector] = useState(players[0]);
-  const [currentPlayer, setCurrentPlayer] = useState(players[0]);
+  const [currentSelector, setCurrentSelector] = useState(0);
+  const [currentPlayer, setCurrentPlayer] = useState(0);
+  const [word, setWord] = useState([]);
+  const [guessedLetters, setGuessedLetters] = useState([]);
 
   const [score, setScore] = useState(Array(players.length).fill(0));
 
   return Math.max(...score) < gameEndPoint ? (
     currentPlayer == currentSelector ? (
-      <WordSelection />
+      <WordSelection
+        players={players}
+        currentSelector={currentSelector}
+        setWord={setWord}
+        currentPlayer={currentPlayer}
+        setCurrentPlayer={setCurrentPlayer}
+      />
     ) : (
-      <WordGuesser />
+      <WordGuesser word={word} guessedLetters={guessedLetters} />
     )
   ) : (
     <ScoreBoard />

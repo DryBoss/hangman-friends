@@ -1,0 +1,19 @@
+@import "./../colors";
+
+.wordSelection {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  height: 100vh;
+  background-color: $background;
+  input {
+    background-color: transparent;
+    border: 2px solid $text;
+    border-radius: 1rem;
+    padding: 0.75rem 2rem;
+    text-align: center;
+    font-size: 0.75rem;
+    color: $text;
+  }
+}

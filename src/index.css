@@ -10,10 +10,26 @@
 input {
   outline: none;
   border: none;
+  color: #9fa2a6;
+  text-align: center;
+  padding: 0.75rem 2rem;
+  margin: 0.5rem;
+  font-size: 0.75rem;
+  border: 2px solid #9fa2a6;
+  border-radius: 1rem;
+  background-color: transparent;
   font-family: "Press Start 2P", cursive;
 }
 
 button {
+  color: #9fa2a6;
+  width: 75%;
+  padding: 0.75rem 2rem;
+  margin: 1rem;
+  font-size: 0.75rem;
+  border: 2px dashed #9fa2a6;
+  border-radius: 1rem;
+  background-color: transparent;
   font-family: "Press Start 2P", cursive;
 }
 

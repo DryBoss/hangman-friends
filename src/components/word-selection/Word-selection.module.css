@@ -1,0 +1,17 @@
+.wordSelection {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  height: 100vh;
+  background-color: #0d0d0d;
+}
+.wordSelection input {
+  background-color: transparent;
+  border: 2px solid #9fa2a6;
+  border-radius: 1rem;
+  padding: 0.75rem 2rem;
+  text-align: center;
+  font-size: 0.75rem;
+  color: #9fa2a6;
+}
