@@ -7,6 +7,7 @@ function WordGuesser({
   setCurrentPlayer,
   word,
   guessedLetters,
+  setGuessedLetters,
   turnDuration,
 }) {
   const keys = [
@@ -18,9 +19,24 @@ function WordGuesser({
   const [time, setTIme] = useState(turnDuration);
   let timer = setInterval(() => {
     setTIme(time - 1);
+    if (time == 0) {
+      setCurrentPlayer((currentPlayer + 1) % players.length);
+      time = 30;
+    }
   }, 1000);
 
-  function handleKeyClick(key) {}
+  function handleKeyClick(key) {
+    if (!guessedLetters.includes(key)) {
+      if (word.includes(key)) {
+        if (word.every((letter) => guessedLetters.includes(letter))) {
+        } else {
+          time = 30;
+          setGuessedLetters(...guessedLetters, key);
+        }
+      } else {
+      }
+    }
+  }
 
   return (
     <div className={styles.wordGuesser}>
@@ -39,7 +55,11 @@ function WordGuesser({
             {keysRow.map((key, index) => (
               <p
                 className={`${styles.key} ${
-                  word.includes(key) ? styles.yes : styles.no
+                  guessedLetters.includes(key)
+                    ? word.includes(key)
+                      ? styles.yes
+                      : styles.no
+                    : ""
                 }`}
                 key={index}
                 onClick={() => handleKeyClick({ key })}

@@ -16,7 +16,7 @@ function WordSelection({
       />
       <button
         onClick={() => {
-          setCurrentPlayer(currentPlayer + 1);
+          setCurrentPlayer((currentPlayer + 1) % players.length);
         }}
       >
         Select

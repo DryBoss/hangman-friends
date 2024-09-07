@@ -18,13 +18,17 @@ function Gameplay({ gameData }) {
 
   return Math.max(...score) < gameEndPoint ? (
     currentPlayer == currentSelector ? (
-      <WordSelection
-        players={players}
-        currentSelector={currentSelector}
-        setWord={setWord}
-        currentPlayer={currentPlayer}
-        setCurrentPlayer={setCurrentPlayer}
-      />
+      word.length == 0 ? (
+        <WordSelection
+          players={players}
+          currentSelector={currentSelector}
+          setWord={setWord}
+          currentPlayer={currentPlayer}
+          setCurrentPlayer={setCurrentPlayer}
+        />
+      ) : (
+        setCurrentPlayer((currentPlayer + 1) % players.length)
+      )
     ) : (
       <WordGuesser
         players={players}
@@ -32,6 +36,7 @@ function Gameplay({ gameData }) {
         setCurrentPlayer={setCurrentPlayer}
         word={word}
         guessedLetters={guessedLetters}
+        setGuessedLetters={setGuessedLetters}
         turnDuration={turnDuration}
       />
     )
