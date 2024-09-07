@@ -10,12 +10,12 @@ function WordSelection({
   return (
     <div className={styles.wordSelection}>
       <h3>{players[currentSelector]}</h3>
-      <input
-        type="text"
-        onChange={(e) => setWord(e.target.value.toUpperCase().split(""))}
-      />
+      <input type="text" id="wordInput" />
       <button
         onClick={() => {
+          setWord(
+            document.getElementById("wordInput").value.toUpperCase().split("")
+          );
           setCurrentPlayer((currentPlayer + 1) % players.length);
         }}
       >

@@ -32,9 +32,12 @@ function Gameplay({ gameData }) {
     ) : (
       <WordGuesser
         players={players}
+        currentSelector={currentSelector}
+        setCurrentSelector={setCurrentSelector}
         currentPlayer={currentPlayer}
         setCurrentPlayer={setCurrentPlayer}
         word={word}
+        setWord={setWord}
         guessedLetters={guessedLetters}
         setGuessedLetters={setGuessedLetters}
         turnDuration={turnDuration}

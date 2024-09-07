@@ -1,39 +1,61 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./Word-guesser.module.css";
 
 function WordGuesser({
   players,
+  currentSelector,
+  setCurrentSelector,
   currentPlayer,
   setCurrentPlayer,
   word,
+  setWord,
   guessedLetters,
   setGuessedLetters,
   turnDuration,
 }) {
+  let guessedLettersVar = [];
+
   const keys = [
     ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"],
     ["A", "S", "D", "F", "G", "H", "J", "K", "L"],
     ["Z", "X", "C", "V", "B", "N", "M"],
   ];
 
-  const [time, setTIme] = useState(turnDuration);
-  let timer = setInterval(() => {
-    setTIme(time - 1);
-    if (time == 0) {
-      setCurrentPlayer((currentPlayer + 1) % players.length);
-      time = 30;
-    }
-  }, 1000);
+  const [time, setTime] = useState(turnDuration);
+  useEffect(() => {
+    // Set up the interval
+    const timer = setInterval(() => {
+      setTime((prevTime) => {
+        if (prevTime <= 1) {
+          // Reset the timer
+          setCurrentPlayer((prevPlayer) => (prevPlayer + 1) % players.length);
+          setTime(turnDuration);
+        }
+        return prevTime - 1;
+      });
+    }, 1000);
+
+    // Clean up the interval on component unmount
+    return () => clearInterval(timer);
+  }, [currentPlayer, players.length, turnDuration]);
 
   function handleKeyClick(key) {
     if (!guessedLetters.includes(key)) {
+      setGuessedLetters([...guessedLetters, key]);
+      guessedLettersVar = [...guessedLetters, key];
       if (word.includes(key)) {
-        if (word.every((letter) => guessedLetters.includes(letter))) {
+        if (word.every((letter) => guessedLettersVar.includes(letter))) {
+          const newSelector = (currentSelector + 1) % players.length;
+          setCurrentSelector(newSelector);
+          setCurrentPlayer(newSelector);
+          setWord([]);
+          setGuessedLetters([]);
         } else {
-          time = 30;
-          setGuessedLetters(...guessedLetters, key);
+          setTime(30);
         }
       } else {
+        setTime(30);
+        setCurrentPlayer((currentPlayer + 1) % players.length);
       }
     }
   }
@@ -62,7 +84,7 @@ function WordGuesser({
                     : ""
                 }`}
                 key={index}
-                onClick={() => handleKeyClick({ key })}
+                onClick={() => handleKeyClick(key)}
               >
                 {key}
               </p>
