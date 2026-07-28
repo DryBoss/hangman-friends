@@ -1,0 +1,97 @@
+.createGame {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: calc(var(--vh, 1vh) * 100 - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  padding: 1.5rem 1.25rem;
+  background: linear-gradient(180deg, var(--primary-soft) 0%, var(--bg) 40%);
+  overflow-y: auto;
+  gap: 1.25rem;
+}
+
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 0.5rem;
+}
+
+.title {
+  font-size: 1.9rem;
+  color: var(--primary-dark);
+  text-align: center;
+}
+
+.tagline {
+  font-size: 0.95rem;
+  color: var(--muted);
+  text-align: center;
+  margin-top: 0.4rem;
+}
+
+.panel {
+  max-width: 24rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.sectionLabel {
+  font-family: "Baloo 2", cursive;
+  font-size: 0.85rem;
+  color: var(--primary);
+  align-self: flex-start;
+  text-transform: uppercase;
+}
+
+.nameInput {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  font-size: 1.05rem;
+  margin-bottom: 0.25rem;
+}
+
+.errorSlot {
+  font-size: 0.9rem;
+  color: var(--danger);
+  min-height: 1.3rem;
+  text-align: center;
+}
+
+.startGame {
+  width: 100%;
+  max-width: 24rem;
+  font-size: 1.3rem;
+  min-height: 3.5rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Desktop: use the extra width instead of just centering a phone-sized
+   card in a sea of empty space. */
+@media (min-width: 760px) {
+  .createGame {
+    padding: 2.5rem;
+  }
+
+  .title {
+    font-size: 2.6rem;
+  }
+
+  .tagline {
+    font-size: 1.1rem;
+  }
+
+  .panel,
+  .startGame {
+    max-width: 42rem;
+  }
+
+  .panel {
+    padding: 2.5rem 3rem;
+  }
+
+  .startGame {
+    align-self: center;
+  }
+}

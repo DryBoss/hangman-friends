@@ -1,0 +1,13 @@
+@import "./../colors";
+
+.scoreboard {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  height: 100vh;
+  background-color: $background;
+  h3 {
+    color: $text;
+  }
+}

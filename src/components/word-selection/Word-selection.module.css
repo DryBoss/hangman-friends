@@ -1,0 +1,75 @@
+.wordSelection {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(var(--vh, 1vh) * 100 - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  background: linear-gradient(180deg, var(--primary-soft) 0%, var(--bg) 40%);
+  padding: 1.5rem;
+  overflow-y: auto;
+}
+
+.panel {
+  max-width: 22rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.heading {
+  font-size: 1.1rem;
+  margin-bottom: 0.75rem;
+  max-width: 22rem;
+  line-height: 1.5;
+}
+
+.hint {
+  font-size: 0.9rem;
+  color: var(--muted);
+  margin-bottom: 1.5rem;
+  max-width: 18rem;
+  line-height: 1.4;
+}
+
+.wordInput {
+  font-size: 1.3rem;
+  text-transform: uppercase;
+  letter-spacing: 0.3rem;
+  width: 100%;
+  max-width: 16rem;
+}
+
+.errorSlot {
+  font-size: 0.85rem;
+  color: var(--danger);
+  height: 1.5rem;
+  margin-top: 0.75rem;
+}
+
+.selectButton {
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+@media (min-width: 760px) {
+  .panel {
+    max-width: 30rem;
+    padding: 3rem;
+  }
+
+  .heading {
+    font-size: 1.4rem;
+    max-width: 26rem;
+  }
+
+  .hint {
+    font-size: 1rem;
+    max-width: 24rem;
+  }
+
+  .wordInput {
+    font-size: 1.6rem;
+    max-width: 20rem;
+  }
+}

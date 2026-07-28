@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Hangman Friends</string>
+    <string name="title_activity_main">Hangman Friends</string>
+    <string name="package_name">com.taiham.hangmanfriends</string>
+    <string name="custom_url_scheme">com.taiham.hangmanfriends</string>
+</resources>

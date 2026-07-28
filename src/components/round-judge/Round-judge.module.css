@@ -1,0 +1,112 @@
+.roundJudge {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(var(--vh, 1vh) * 100 - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  background: linear-gradient(180deg, var(--primary-soft) 0%, var(--bg) 40%);
+  padding: 1.5rem;
+  text-align: center;
+  overflow-y: auto;
+}
+
+.panel {
+  max-width: 22rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.heading {
+  font-size: 1.15rem;
+  margin-bottom: 1rem;
+}
+
+.word {
+  font-family: "Baloo 2", cursive;
+  font-size: 1.5rem;
+  letter-spacing: 0.25rem;
+  margin-bottom: 1rem;
+  color: var(--primary-dark);
+  word-break: break-word;
+}
+
+.hint {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-bottom: 1.25rem;
+  line-height: 1.4;
+}
+
+.preview {
+  width: 100%;
+  border-top: 2px solid var(--primary-soft);
+  padding-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.previewLabel {
+  font-family: "Baloo 2", cursive;
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin-bottom: 0.5rem;
+}
+
+.previewEmpty {
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.previewRow {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.95rem;
+  padding: 0.25rem 0;
+}
+
+.voteTally {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-top: 0.5rem;
+}
+
+.gain {
+  color: var(--success-dark);
+  font-weight: 700;
+}
+
+.loss {
+  color: var(--danger-dark);
+  font-weight: 700;
+}
+
+.actions {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+@media (min-width: 760px) {
+  .panel {
+    max-width: 32rem;
+    padding: 3rem;
+  }
+
+  .heading {
+    font-size: 1.5rem;
+  }
+
+  .word {
+    font-size: 2rem;
+  }
+
+  .hint {
+    font-size: 1rem;
+  }
+
+  .actions {
+    flex-direction: row;
+  }
+}

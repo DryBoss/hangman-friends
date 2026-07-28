@@ -1,0 +1,12 @@
+{
+  "appId": "com.taiham.hangmanfriends",
+  "appName": "Hangman Friends",
+  "webDir": "dist",
+  "backgroundColor": "#f4f2ff",
+  "android": {
+    "backgroundColor": "#f4f2ff"
+  },
+  "server": {
+    "androidScheme": "https"
+  }
+}

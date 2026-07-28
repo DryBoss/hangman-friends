@@ -1,0 +1,207 @@
+.wordGuesser {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  min-height: calc(var(--vh, 1vh) * 100);
+  background: linear-gradient(180deg, var(--primary-soft) 0%, var(--bg) 25%);
+  padding: 1rem 0.75rem;
+  gap: 0.75rem;
+  overflow-y: auto;
+}
+
+.topBar {
+  width: 100%;
+  max-width: 26rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.wordGuesser h3 {
+  font-size: 1.05rem;
+  color: var(--primary-dark);
+  overflow-wrap: anywhere;
+}
+
+.timer {
+  flex-shrink: 0;
+  font-family: "Baloo 2", cursive;
+  font-size: 1.1rem;
+  border-radius: var(--radius-sm);
+  padding: 0.5rem 1rem;
+  background-color: var(--primary-soft);
+  color: var(--primary-dark);
+}
+
+.timerLow {
+  color: var(--on-primary);
+  background-color: var(--danger);
+  animation: pulse 0.6s infinite;
+}
+
+.word {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 26rem;
+  gap: 0.4rem;
+}
+
+.word p {
+  font-family: "Baloo 2", cursive;
+  font-size: 1.3rem;
+  text-transform: uppercase;
+  margin: 0;
+  padding: 0.5rem 0.5rem 0.35rem;
+  min-width: 1.4rem;
+  text-align: center;
+  border-bottom: 4px solid var(--primary);
+  background-color: var(--surface);
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  box-shadow: 0 2px 8px rgba(var(--shadow-color), 0.12);
+}
+
+/* A space in the secret phrase - just a gap between tile groups, never a
+   tile of its own since there's nothing to guess. */
+.wordGap {
+  display: inline-block;
+  width: 0.9rem;
+}
+
+/* A hyphen in the secret word - shown up front like punctuation, styled
+   distinctly from letter tiles so it reads as "already known". */
+.wordSeparator {
+  border-bottom-color: var(--muted);
+  color: var(--muted);
+  box-shadow: none;
+}
+
+.valueHint {
+  font-size: 0.85rem;
+  color: var(--muted);
+  text-align: center;
+  background-color: var(--primary-soft);
+  border-radius: 999px;
+  padding: 0.5rem 1.1rem;
+  max-width: 26rem;
+  line-height: 1.4;
+}
+
+.valueHint strong {
+  font-weight: 700;
+}
+
+.keyboard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  width: 100%;
+  max-width: 34rem;
+}
+
+.keyRow {
+  display: flex;
+  justify-content: center;
+  flex-wrap: nowrap;
+  gap: 0.3rem;
+  width: 100%;
+}
+
+.key {
+  font-family: "Baloo 2", cursive;
+  font-size: clamp(0.6rem, 3vw, 0.9rem);
+  padding: 0;
+  margin: 0;
+  /* Uniform width across every row, sized off the longest row (10 keys) so
+     rows never wrap - shorter rows just end up with fewer, centered keys. */
+  flex: 0 1 calc((100% - 9 * 0.3rem) / 10);
+  max-width: 3.1rem;
+  min-width: 0;
+  height: clamp(2.2rem, 9vw, 2.9rem);
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  border: none;
+  background-color: var(--surface);
+  color: var(--ink);
+  box-shadow: 0 4px 0 0 var(--primary-soft);
+  cursor: pointer;
+  transition: transform 0.06s ease, box-shadow 0.06s ease;
+}
+
+.key:active:not(:disabled) {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 0 var(--primary-soft);
+}
+
+.key:disabled {
+  cursor: default;
+}
+
+.yes {
+  background-color: var(--success);
+  color: var(--on-primary);
+  box-shadow: 0 4px 0 0 var(--success-dark);
+}
+
+.no {
+  background-color: var(--danger-soft);
+  color: var(--danger-dark);
+  box-shadow: 0 4px 0 0 var(--danger-soft-shadow);
+  opacity: 0.85;
+}
+
+@keyframes pulse {
+  50% {
+    opacity: 0.6;
+  }
+}
+
+@media (min-width: 760px) {
+  .topBar,
+  .word,
+  .valueHint {
+    max-width: 34rem;
+  }
+
+  .wordGuesser h3 {
+    font-size: 1.3rem;
+  }
+
+  .timer {
+    font-size: 1.3rem;
+    padding: 0.6rem 1.25rem;
+  }
+
+  .word p {
+    font-size: 1.7rem;
+    padding: 0.65rem 0.7rem 0.45rem;
+    min-width: 1.8rem;
+  }
+
+  .valueHint {
+    font-size: 1rem;
+    padding: 0.6rem 1.4rem;
+  }
+
+  .keyboard {
+    max-width: 42rem;
+    gap: 0.55rem;
+  }
+
+  .keyRow {
+    gap: 0.4rem;
+  }
+
+  .key {
+    font-size: clamp(0.75rem, 1.6vw, 1.05rem);
+    max-width: 3.8rem;
+    height: clamp(3rem, 4.5vw, 3.6rem);
+    flex-basis: calc((100% - 9 * 0.4rem) / 10);
+  }
+}

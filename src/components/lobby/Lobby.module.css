@@ -1,0 +1,172 @@
+.lobby {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: calc(var(--vh, 1vh) * 100 - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  padding: 1.5rem 1.25rem;
+  background: linear-gradient(180deg, var(--primary-soft) 0%, var(--bg) 40%);
+  overflow-y: auto;
+  gap: 1.25rem;
+}
+
+.loadingText {
+  margin-top: 3rem;
+  color: var(--muted);
+}
+
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 0.5rem;
+}
+
+.title {
+  font-size: 1.1rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.codeRow {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 0.4rem;
+}
+
+.code {
+  font-family: "Baloo 2", cursive;
+  font-size: 2.4rem;
+  letter-spacing: 0.25rem;
+  color: var(--primary-dark);
+}
+
+.copiedNote {
+  font-size: 0.85rem;
+  color: var(--success-dark);
+  margin-top: 0.3rem;
+}
+
+.iconButton {
+  width: 2.6rem;
+  height: 2.6rem;
+  min-height: 0;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.panel {
+  width: 100%;
+  max-width: 26rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.sectionLabel {
+  font-family: "Baloo 2", cursive;
+  font-size: 0.85rem;
+  color: var(--primary);
+  align-self: flex-start;
+  text-transform: uppercase;
+}
+
+.playerCount {
+  color: var(--muted);
+  text-transform: none;
+}
+
+.hint {
+  font-size: 0.85rem;
+  color: var(--muted);
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.playerList {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.playerRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0.6rem 0.8rem;
+  background-color: var(--primary-soft);
+  border-radius: var(--radius-sm);
+}
+
+.playerName {
+  font-size: 1.02rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  overflow-wrap: anywhere;
+}
+
+.hostBadge,
+.youBadge {
+  font-size: 0.7rem;
+  font-family: "Baloo 2", cursive;
+  text-transform: uppercase;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  background-color: var(--primary);
+  color: var(--on-primary);
+}
+
+.youBadge {
+  background-color: var(--surface);
+  color: var(--primary-dark);
+  border: 1px solid var(--primary);
+}
+
+.reorderButtons {
+  display: flex;
+  gap: 0.3rem;
+}
+
+.reorderButtons .iconButton {
+  width: 2rem;
+  height: 2rem;
+}
+
+.errorSlot {
+  font-size: 0.9rem;
+  color: var(--danger);
+  min-height: 1.3rem;
+  text-align: center;
+}
+
+.startButton {
+  width: 100%;
+  max-width: 26rem;
+  font-size: 1.3rem;
+  min-height: 3.5rem;
+}
+
+@media (min-width: 760px) {
+  .panel,
+  .startButton {
+    max-width: 34rem;
+  }
+
+  .panel {
+    padding: 2rem 2.5rem;
+  }
+
+  .code {
+    font-size: 3rem;
+  }
+}

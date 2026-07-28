@@ -1,0 +1,101 @@
+.joinGame {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: calc(var(--vh, 1vh) * 100 - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  padding: 1.5rem 1.25rem;
+  background: linear-gradient(180deg, var(--primary-soft) 0%, var(--bg) 40%);
+  overflow-y: auto;
+  gap: 1.25rem;
+}
+
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 0.5rem;
+}
+
+.title {
+  font-size: 1.9rem;
+  color: var(--primary-dark);
+  text-align: center;
+}
+
+.tagline {
+  font-size: 0.95rem;
+  color: var(--muted);
+  text-align: center;
+  margin-top: 0.4rem;
+}
+
+.panel {
+  max-width: 24rem;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.sectionLabel {
+  font-family: "Baloo 2", cursive;
+  font-size: 0.85rem;
+  color: var(--primary);
+  align-self: flex-start;
+  text-transform: uppercase;
+  margin-top: 0.75rem;
+}
+
+.sectionLabel:first-child {
+  margin-top: 0;
+}
+
+.codeInput {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  font-size: 1.4rem;
+  letter-spacing: 0.2rem;
+  text-align: center;
+  font-family: "Baloo 2", cursive;
+  text-transform: uppercase;
+}
+
+.nameInput {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  font-size: 1.05rem;
+}
+
+.errorSlot {
+  font-size: 0.9rem;
+  color: var(--danger);
+  min-height: 1.3rem;
+  text-align: center;
+}
+
+.joinButton {
+  width: 100%;
+  max-width: 24rem;
+  font-size: 1.3rem;
+  min-height: 3.5rem;
+}
+
+@media (min-width: 760px) {
+  .title {
+    font-size: 2.6rem;
+  }
+
+  .tagline {
+    font-size: 1.1rem;
+  }
+
+  .panel,
+  .joinButton {
+    max-width: 30rem;
+  }
+
+  .panel {
+    padding: 2.5rem 3rem;
+  }
+}

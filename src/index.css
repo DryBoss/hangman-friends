@@ -1,0 +1,196 @@
+/* Global Styles - minimal warm-neutral palette, one muted accent, one theme only */
+/* Fonts are self-hosted via @fontsource (bundled at build time) instead of
+   Google's CDN, so the app works fully offline once packaged with Capacitor. */
+@import "@fontsource/baloo-2/latin-600.css";
+@import "@fontsource/baloo-2/latin-700.css";
+@import "@fontsource/baloo-2/latin-800.css";
+@import "@fontsource/inter/latin-400.css";
+@import "@fontsource/inter/latin-500.css";
+@import "@fontsource/inter/latin-600.css";
+@import "@fontsource/inter/latin-700.css";
+
+:root {
+  --radius-lg: 1.5rem;
+  --radius-md: 1rem;
+  --radius-sm: 0.6rem;
+
+  font-size: 16px;
+  font-family: "Inter", sans-serif;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+
+  --bg: #f6f2ec;
+  --surface: #ffffff;
+  --ink: #3f3a34;
+  --muted: #8d8477;
+
+  --primary: #b1592f;
+  --primary-dark: #8a4423;
+  --primary-soft: #ece3d7;
+  --on-primary: #fffaf4;
+
+  --success: #71875f;
+  --success-dark: #566b48;
+  --danger: #b1523f;
+  --danger-dark: #8a3c2d;
+  --danger-soft: #f0e2db;
+  --danger-soft-shadow: #dcc7bb;
+  --gold: #c99a4a;
+
+  --shadow-color: 63, 58, 52;
+  --shadow-opacity: 0.1;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  background-color: var(--bg);
+}
+
+body {
+  color: var(--ink);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+#root {
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Baloo 2", cursive;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: var(--ink);
+  margin: 0;
+}
+
+p {
+  margin: 0;
+}
+
+input {
+  outline: none;
+  border: 2px solid var(--primary-soft);
+  border-radius: var(--radius-sm);
+  color: var(--ink);
+  text-align: center;
+  padding: 0.75rem 1.25rem;
+  font-size: 1rem;
+  font-family: "Inter", sans-serif;
+  background-color: var(--surface);
+  transition: border-color 0.15s ease, background-color 0.2s ease, color 0.2s ease;
+}
+
+input:focus {
+  border-color: var(--primary);
+}
+
+button {
+  font-family: "Baloo 2", cursive;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--on-primary);
+  width: 100%;
+  min-height: 3.25rem;
+  padding: 0.85rem 1.75rem;
+  margin: 0;
+  font-size: 1.05rem;
+  border: none;
+  border-radius: var(--radius-md);
+  background-color: var(--primary);
+  box-shadow: 0 6px 0 0 var(--primary-dark);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: transform 0.08s ease, box-shadow 0.08s ease, filter 0.15s ease,
+    background-color 0.2s ease, color 0.2s ease;
+}
+
+button:hover:not(:disabled) {
+  filter: brightness(1.15);
+}
+
+button:active:not(:disabled) {
+  transform: translateY(4px);
+  box-shadow: 0 2px 0 0 var(--primary-dark);
+}
+
+button:disabled {
+  cursor: default;
+  opacity: 0.4;
+  box-shadow: 0 6px 0 0 rgba(var(--shadow-color), 0.25);
+}
+
+/* Secondary/ghost button variant - available to any component via this class */
+.btnGhost {
+  background-color: var(--surface);
+  color: var(--ink);
+  box-shadow: 0 6px 0 0 var(--primary-soft);
+  border: 2px solid var(--primary-soft);
+}
+
+.btnGhost:active:not(:disabled) {
+  box-shadow: 0 2px 0 0 var(--primary-soft);
+}
+
+.btnDanger {
+  background-color: var(--surface);
+  color: var(--ink);
+  box-shadow: 0 6px 0 0 var(--danger-soft);
+  border: 2px solid var(--danger-soft);
+}
+
+.btnDanger:active:not(:disabled) {
+  box-shadow: 0 2px 0 0 var(--danger-soft);
+}
+
+/* Shared rounded card used to frame every screen */
+.card {
+  position: relative;
+  background-color: var(--surface);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 16px 40px -12px rgba(var(--shadow-color), var(--shadow-opacity));
+  padding: 2rem 1.5rem;
+  width: 100%;
+  transition: background-color 0.2s ease;
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 1.5rem;
+  right: 1.5rem;
+  height: 6px;
+  border-radius: 0 0 6px 6px;
+  background: var(--primary);
+}
+
+/* Desktop: keep the mobile-first layouts from stretching edge to edge on
+   wide screens - each screen already centers a max-width card, this just
+   adds a bit of breathing room and a slightly larger touch/click target. */
+@media (min-width: 760px) {
+  body {
+    font-size: 1.05rem;
+  }
+}

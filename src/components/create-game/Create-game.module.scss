@@ -1,0 +1,50 @@
+@import "./../colors";
+
+.createGame {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  height: calc(var(--vh, 1vh) * 100);
+  padding: 0rem;
+  background-color: $background;
+  h1 {
+    margin: 1rem;
+    margin-top: 1.25rem;
+    font-size: 1.25rem;
+    color: $brightest;
+    text-align: center;
+  }
+}
+
+.gameRange {
+  margin: 1rem;
+  font-size: 1rem;
+  text-align: center;
+  line-height: 2rem;
+  cursor: pointer;
+}
+
+.players {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  .player {
+    display: flex;
+    justify-content: center;
+    outline: none;
+    border: none;
+    color: #a31612;
+    text-align: center;
+    padding-right: 0.5rem;
+    margin: 0.5rem;
+    border: 2px solid #a31612;
+    border-radius: 1rem;
+    background-color: transparent;
+    font-family: "Press Start 2P", cursive;
+  }
+  p {
+    padding: 1rem;
+  }
+}

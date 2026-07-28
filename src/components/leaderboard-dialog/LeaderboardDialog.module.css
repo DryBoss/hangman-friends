@@ -1,0 +1,61 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(74, 51, 36, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  z-index: 50;
+}
+
+.dialog {
+  position: relative;
+  max-width: 24rem;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.closeButton {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  width: 2.3rem;
+  height: 2.3rem;
+  min-height: 0;
+  padding: 0;
+  margin: 0;
+  border: none;
+  box-shadow: none;
+  background-color: var(--primary-soft);
+  color: var(--primary-dark);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.closeButton:active:not(:disabled) {
+  transform: none;
+}
+
+.closeIcon {
+  transform: rotate(45deg);
+  display: block;
+}
+
+.heading {
+  font-size: 1.15rem;
+  text-align: center;
+}
+
+.progress {
+  font-size: 0.85rem;
+  color: var(--muted);
+  text-align: center;
+  margin-top: -0.4rem;
+}
