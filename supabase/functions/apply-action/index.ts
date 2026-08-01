@@ -10,6 +10,7 @@
 
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { initState, reduce, maskForBroadcast } from "../_shared/engine.js";
+import { corsHeaders } from "../_shared/cors.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -51,13 +52,24 @@ async function writeState(ctx, state) {
 }
 
 function ok(extra = {}) {
-  return new Response(JSON.stringify({ ok: true, ...extra }), { headers: { "Content-Type": "application/json" } });
+  return new Response(JSON.stringify({ ok: true, ...extra }), {
+    headers: { ...corsHeaders, "Content-Type": "application/json" },
+  });
 }
 function fail(message, status = 400) {
-  return new Response(JSON.stringify({ error: message }), { status, headers: { "Content-Type": "application/json" } });
+  return new Response(JSON.stringify({ error: message }), {
+    status,
+    headers: { ...corsHeaders, "Content-Type": "application/json" },
+  });
 }
 
 Deno.serve(async (req) => {
+  // The browser sends this before the real POST, to ask permission -
+  // without a fast, headers-only reply here, the actual request never
+  // gets sent at all.
+  if (req.method === "OPTIONS") {
+    return new Response("ok", { headers: corsHeaders });
+  }
   if (req.method !== "POST") return fail("Method not allowed", 405);
 
   const supabase = createClient(SUPABASE_URL, SERVICE_ROLE_KEY);
