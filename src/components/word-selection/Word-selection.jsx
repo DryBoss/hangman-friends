@@ -17,12 +17,12 @@ function validate(value, minLength, maxLength) {
   return null;
 }
 
-function WordSelection({ players, selectorIndex, minLength, maxLength, onSelectWord }) {
+function WordSelection({ players, selectorIndex, minLength, maxLength, onSelectWord, pending = false }) {
   const [value, setValue] = useState("");
   const [touched, setTouched] = useState(false);
 
   const error = validate(value, minLength, maxLength);
-  const canSubmit = value.length > 0 && !error;
+  const canSubmit = value.length > 0 && !error && !pending;
 
   const submit = () => {
     if (!canSubmit) {
@@ -52,6 +52,7 @@ function WordSelection({ players, selectorIndex, minLength, maxLength, onSelectW
           maxLength={maxLength * 2}
           placeholder="secret word or phrase"
           className={styles.wordInput}
+          disabled={pending}
           onChange={(e) => {
             setValue(e.target.value.replace(/[^a-zA-Z -]/g, ""));
             setTouched(false);
@@ -59,14 +60,14 @@ function WordSelection({ players, selectorIndex, minLength, maxLength, onSelectW
           onKeyDown={(e) => e.key === "Enter" && submit()}
         />
         <div className={styles.errorSlot}>
-          {touched && error ? error : "\u00A0"}
+          {pending ? "Sending…" : touched && error ? error : "\u00A0"}
         </div>
         <button
           className={styles.selectButton}
           disabled={!canSubmit}
           onClick={submit}
         >
-          Lock It In
+          {pending ? "Sending…" : "Lock It In"}
         </button>
       </div>
     </div>

@@ -26,6 +26,12 @@ export const SELECT_DEADLINE_MS = 60_000;
 export const PASS_DEADLINE_MS = 8_000;
 export const JUDGE_DEADLINE_MS = 45_000;
 
+// How long since a player's last heartbeat before they're treated as
+// disconnected for early-skip purposes (see TIME_UP / AUTO_ADVANCE_SELECT
+// / AUTO_ADVANCE_PASS below). Online clients heartbeat every 15s, so this
+// tolerates a couple of missed beats before acting on it.
+export const PRESENCE_STALE_MS = 40_000;
+
 export const FALLBACK_WORDS = [
   "PANCAKE", "GALAXY", "UMBRELLA", "PUZZLE", "HARBOR", "WHISPER",
   "LANTERN", "CACTUS", "MERMAID", "THUNDER", "PRETZEL", "COMPASS",
@@ -91,8 +97,14 @@ export function maskForBroadcast(state) {
 // error is set for anything from "not your turn" to a stale/duplicate
 // click, so callers can decide how noisy to be about it.
 export function reduce(state, action, meta) {
-  const { seatIndex, playerCount, bypassAuth = false } = meta;
+  const { seatIndex, playerCount, bypassAuth = false, activePlayerStale = false } = meta;
   const authorized = (requiredSeat) => bypassAuth || seatIndex === requiredSeat;
+  // Skips the "hasn't timed out yet" gate below when the caller (the
+  // apply-action edge function, having independently checked the active
+  // player's last-seen heartbeat against the real players table) says
+  // they've gone quiet - that's what lets a disconnected player's turn
+  // get skipped well before their full timer would otherwise expire.
+  const deadlineGateOpen = () => bypassAuth || activePlayerStale;
 
   switch (action.type) {
     case "SELECT_WORD": {
@@ -179,7 +191,7 @@ export function reduce(state, action, meta) {
 
     case "TIME_UP": {
       if (state.phase !== "guess") return { state, error: null };
-      if (!bypassAuth && state.turnDeadline && Date.now() < state.turnDeadline) {
+      if (!deadlineGateOpen() && state.turnDeadline && Date.now() < state.turnDeadline) {
         return { state, error: "Turn hasn't timed out yet" };
       }
       const score = [...state.score];
@@ -200,7 +212,7 @@ export function reduce(state, action, meta) {
 
     case "AUTO_ADVANCE_SELECT": {
       if (state.phase !== "select") return { state, error: null };
-      if (!bypassAuth && state.turnDeadline && Date.now() < state.turnDeadline) {
+      if (!deadlineGateOpen() && state.turnDeadline && Date.now() < state.turnDeadline) {
         return { state, error: "Not timed out yet" };
       }
       const word = FALLBACK_WORDS[Math.floor(Math.random() * FALLBACK_WORDS.length)].split("");
@@ -216,7 +228,7 @@ export function reduce(state, action, meta) {
 
     case "AUTO_ADVANCE_PASS": {
       if (state.phase !== "pass") return { state, error: null };
-      if (!bypassAuth && state.turnDeadline && Date.now() < state.turnDeadline) {
+      if (!deadlineGateOpen() && state.turnDeadline && Date.now() < state.turnDeadline) {
         return { state, error: "Not timed out yet" };
       }
       return {

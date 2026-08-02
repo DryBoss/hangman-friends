@@ -1,12 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import { supabase } from "./../lib/supabaseClient";
-import { AUTO_ADVANCE_ACTION_FOR_PHASE } from "./../game/engine";
+import { AUTO_ADVANCE_ACTION_FOR_PHASE, PRESENCE_STALE_MS } from "./../game/engine";
 
 const HEARTBEAT_MS = 15_000;
-// If we haven't heard a heartbeat from a player in this long, the lobby /
-// spectator views show them as disconnected (informational only for v1 -
-// the actual turn-skip logic lives in the turn_deadline watchdog, not here).
-export const STALE_AFTER_MS = 40_000;
+// Re-exported for any UI that wants to show "X looks disconnected" using
+// the same threshold the edge function actually acts on (see
+// PRESENCE_STALE_MS in the shared engine) - not currently used for
+// display anywhere, but kept as one source of truth rather than a second
+// magic number.
+export { PRESENCE_STALE_MS };
 
 export function useRoomSync(roomCode, playerId) {
   const [room, setRoom] = useState(null);
@@ -54,8 +56,9 @@ export function useRoomSync(roomCode, playerId) {
     };
   }, [roomCode]);
 
-  // Presence heartbeat: lets other clients show "X is offline" and gives
-  // the host a signal for who's actually around.
+  // Presence heartbeat: other clients use how stale this gets (see
+  // useTurnDeadlineWatchdog below) to detect a disconnected active player
+  // and skip their turn early, without waiting for their full timer.
   useEffect(() => {
     if (!roomCode || !playerId) return;
     const beat = () =>
@@ -63,16 +66,7 @@ export function useRoomSync(roomCode, playerId) {
         .eq("room_code", roomCode).eq("id", playerId);
     beat();
     const interval = setInterval(beat, HEARTBEAT_MS);
-    const markOffline = () => {
-      navigator.sendBeacon?.(
-        `${import.meta.env.VITE_SUPABASE_URL}/rest/v1/players?room_code=eq.${roomCode}&id=eq.${playerId}`
-      );
-    };
-    window.addEventListener("beforeunload", markOffline);
-    return () => {
-      clearInterval(interval);
-      window.removeEventListener("beforeunload", markOffline);
-    };
+    return () => clearInterval(interval);
   }, [roomCode, playerId]);
 
   const me = players.find((p) => p.id === playerId) ?? null;
@@ -81,28 +75,42 @@ export function useRoomSync(roomCode, playerId) {
 }
 
 // Watches turn_deadline and fires the matching AUTO_ADVANCE_* action once
-// it passes. Safe for every client to run this (the Edge Function
-// re-checks the deadline server-side before applying), so no election of
-// a single "responsible" client is needed - whichever client's timer
-// fires first wins, the rest are harmless no-ops.
-export function useTurnDeadlineWatchdog(roomCode, playerId, gameState, sendAction) {
-  const timeoutRef = useRef(null);
+// it passes - plus polls periodically before that, so a disconnected
+// active player's turn can be skipped well before their full timer
+// expires (see PRESENCE_STALE_MS in the shared engine: the edge function
+// independently checks their real last-seen heartbeat and only honors an
+// early request if they've actually gone quiet). Safe for every client to
+// run this - most early polls get silently rejected, and there's no
+// election of a single "responsible" client needed either way.
+export function useTurnDeadlineWatchdog(roomCode, playerId, gameState, sendSystemAction) {
+  const deadlineTimeoutRef = useRef(null);
+  const earlyPollIntervalRef = useRef(null);
 
   useEffect(() => {
-    clearTimeout(timeoutRef.current);
+    clearTimeout(deadlineTimeoutRef.current);
+    clearInterval(earlyPollIntervalRef.current);
+
     const state = gameState?.state;
     if (!state?.turnDeadline) return;
     const actionForPhase = AUTO_ADVANCE_ACTION_FOR_PHASE[state.phase];
     if (!actionForPhase) return;
 
+    const fire = () => sendSystemAction({ type: actionForPhase });
+
     const msRemaining = state.turnDeadline - Date.now();
     // Small stagger so every connected client isn't racing to fire the
     // instant the deadline hits.
     const jitter = Math.random() * 1000;
-    timeoutRef.current = setTimeout(() => {
-      sendAction({ type: actionForPhase });
-    }, Math.max(0, msRemaining) + jitter);
+    deadlineTimeoutRef.current = setTimeout(fire, Math.max(0, msRemaining) + jitter);
 
-    return () => clearTimeout(timeoutRef.current);
-  }, [roomCode, playerId, gameState?.state?.turnDeadline, gameState?.state?.phase, sendAction]);
+    // Every 8s until then, ask anyway - almost always rejected ("not timed
+    // out yet"), but that same request is what lets the edge function spot
+    // a disconnected active player and let it through early.
+    earlyPollIntervalRef.current = setInterval(fire, 8000);
+
+    return () => {
+      clearTimeout(deadlineTimeoutRef.current);
+      clearInterval(earlyPollIntervalRef.current);
+    };
+  }, [roomCode, playerId, gameState?.state?.turnDeadline, gameState?.state?.phase, sendSystemAction]);
 }

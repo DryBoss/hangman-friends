@@ -53,6 +53,7 @@ export function useLocalAdapter(playerNames, settings) {
     playerNames,
     mySeat: currentActorSeat(maskedState),
     isHost: true,
+    pending: false,
     selectWord, readyToGuess, guessLetter, judgeDecide, judgeVote: judgeDecide, nextRound, restart, sendAction,
   };
 }

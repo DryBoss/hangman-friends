@@ -13,6 +13,7 @@
   "dependencies": {
     "@capacitor/app": "^8.1.0",
     "@capacitor/core": "^8.4.1",
+    "@capacitor-mlkit/barcode-scanning": "^8.1.0",
     "@fontsource/baloo-2": "^5.2.7",
     "@fontsource/inter": "^5.2.8",
     "@supabase/supabase-js": "^2.45.4",

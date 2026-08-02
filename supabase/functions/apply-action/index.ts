@@ -9,7 +9,7 @@
 // engine, shared with the local and local-network modes.
 
 import { createClient } from "npm:@supabase/supabase-js@2";
-import { initState, reduce, maskForBroadcast } from "../_shared/engine.js";
+import { initState, reduce, maskForBroadcast, PRESENCE_STALE_MS } from "../_shared/engine.js";
 import { corsHeaders } from "../_shared/cors.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
@@ -20,7 +20,7 @@ async function loadContext(supabase, roomCode, playerId) {
   const { data: players } = await supabase.from("players").select("*").eq("room_code", roomCode);
   const me = players?.find((p) => p.id === playerId);
   return {
-    supabase, roomCode, playerId,
+    supabase, roomCode, playerId, players: players ?? [],
     seatIndex: me?.seat_index ?? null,
     isHost: room?.host_player_id === playerId,
     playerCount: players?.length ?? 0,
@@ -112,8 +112,23 @@ Deno.serve(async (req) => {
     if (realWord) trueState = { ...trueState, word: realWord };
   }
 
+  // For the three "is anyone still there" actions, check the real
+  // players table for how stale the active seat's heartbeat is - this is
+  // what lets a disconnected player's turn get skipped well before their
+  // full timer expires, without trusting a client's say-so about who's
+  // offline (a client can request an early check any time; only the
+  // server's own view of last_seen decides whether it's honored).
+  let activePlayerStale = false;
+  if (action.type === "TIME_UP" || action.type === "AUTO_ADVANCE_SELECT" || action.type === "AUTO_ADVANCE_PASS") {
+    const activeSeat = action.type === "AUTO_ADVANCE_SELECT" ? trueState.selectorIndex : trueState.guesserIndex;
+    const activePlayer = ctx.players.find((p) => p.seat_index === activeSeat);
+    if (activePlayer?.last_seen) {
+      activePlayerStale = Date.now() - new Date(activePlayer.last_seen).getTime() > PRESENCE_STALE_MS;
+    }
+  }
+
   const { state: nextState, error } = reduce(trueState, action, {
-    seatIndex: ctx.seatIndex, playerCount: ctx.playerCount,
+    seatIndex: ctx.seatIndex, playerCount: ctx.playerCount, activePlayerStale,
   });
   if (error) return fail(error, error.includes("timed out") || error.includes("Not timed out") ? 409 : 403);
 

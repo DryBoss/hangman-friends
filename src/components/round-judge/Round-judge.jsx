@@ -6,7 +6,7 @@ import styles from "./Round-judge.module.css";
 // Local same-device: one shared screen, so it's just a single group
 // verdict instead of a per-seat vote - isLocalMode swaps the UI for that.
 function RoundJudge({
-  word, players, roundDelta, votes, eligibleVoters, isGuesser, myVote, onVote, isLocalMode = false,
+  word, players, roundDelta, votes, eligibleVoters, isGuesser, myVote, onVote, isLocalMode = false, pending = false,
 }) {
   const preview = players
     .map((name, index) => ({ name, delta: roundDelta[index] }))
@@ -45,10 +45,10 @@ function RoundJudge({
 
         {isLocalMode ? (
           <div className={styles.actions}>
-            <button className={styles.approve} onClick={() => onVote(true)}>
-              Approve
+            <button className={styles.approve} onClick={() => onVote(true)} disabled={pending}>
+              {pending ? "Sending…" : "Approve"}
             </button>
-            <button className="btnDanger" onClick={() => onVote(false)}>
+            <button className="btnDanger" onClick={() => onVote(false)} disabled={pending}>
               Reject - Illegal Word
             </button>
           </div>
@@ -65,10 +65,10 @@ function RoundJudge({
               </p>
             ) : (
               <div className={styles.actions}>
-                <button className={styles.approve} onClick={() => onVote(true)}>
-                  Approve
+                <button className={styles.approve} onClick={() => onVote(true)} disabled={pending}>
+                  {pending ? "Sending…" : "Approve"}
                 </button>
-                <button className="btnDanger" onClick={() => onVote(false)}>
+                <button className="btnDanger" onClick={() => onVote(false)} disabled={pending}>
                   Reject - Illegal Word
                 </button>
               </div>

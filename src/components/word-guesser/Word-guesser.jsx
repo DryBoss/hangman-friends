@@ -15,6 +15,7 @@ function WordGuesser({
   turnSeq,
   onGuess,
   onTimeUp,
+  pending = false,
 }) {
   const timerEnabled = turnDuration != null;
   const [time, setTime] = useState(timerEnabled ? turnDuration : null);
@@ -44,12 +45,13 @@ function WordGuesser({
   // Let players use a physical keyboard too.
   useEffect(() => {
     function handleKeyDown(e) {
+      if (pending) return;
       const letter = e.key.toUpperCase();
       if (/^[A-Z]$/.test(letter)) onGuess(letter);
     }
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [onGuess]);
+  }, [onGuess, pending]);
 
   const lowOnTime = timerEnabled && time <= 5;
 
@@ -83,9 +85,15 @@ function WordGuesser({
       </div>
 
       <div className={styles.valueHint}>
-        Each correct letter is worth <strong>1 point</strong>, plus a{" "}
-        <strong>+2 bonus</strong> for finishing the word - nothing lost if wrong,
-        but running out the clock costs <strong>-1</strong>
+        {pending ? (
+          "Sending…"
+        ) : (
+          <>
+            Each correct letter is worth <strong>1 point</strong>, plus a{" "}
+            <strong>+2 bonus</strong> for finishing the word - nothing lost if wrong,
+            but running out the clock costs <strong>-1</strong>
+          </>
+        )}
       </div>
 
       <div className={styles.keyboard}>
@@ -98,7 +106,7 @@ function WordGuesser({
                 <button
                   type="button"
                   key={key}
-                  disabled={guessed}
+                  disabled={guessed || pending}
                   className={`${styles.key} ${
                     guessed ? (correct ? styles.yes : styles.no) : ""
                   }`}

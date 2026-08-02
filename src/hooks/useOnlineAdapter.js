@@ -8,9 +8,12 @@ function seatedPlayers(players) {
 
 export function useOnlineAdapter(roomCode, playerId) {
   const { players, gameState, me, loading } = useRoomSync(roomCode, playerId);
-  const { selectWord, readyToGuess, guessLetter, judgeVote, nextRound, restart, sendAction } =
+  const { selectWord, readyToGuess, guessLetter, judgeVote, nextRound, restart, sendAction, sendSystemAction, pending } =
     useGameActions(roomCode, playerId);
-  useTurnDeadlineWatchdog(roomCode, playerId, gameState, sendAction);
+  // The watchdog's own polling uses sendSystemAction, not sendAction - it
+  // runs in the background regardless of what the user's doing, so it
+  // shouldn't toggle the same "pending" flag a real button press does.
+  useTurnDeadlineWatchdog(roomCode, playerId, gameState, sendSystemAction);
 
   const seated = seatedPlayers(players);
   const playerNames = seated.map((p) => p.name);
@@ -28,6 +31,7 @@ export function useOnlineAdapter(roomCode, playerId) {
     playerNames,
     mySeat: me?.seat_index ?? null,
     isHost: me?.is_host ?? false,
+    pending,
     selectWord, readyToGuess, guessLetter, judgeVote, judgeDecide, nextRound, restart, sendAction,
   };
 }

@@ -50,12 +50,27 @@ export function useLanPeer(hostUrl, playerId, name) {
   }, [hostUrl, playerId, name, retryToken]);
 
   const reconnect = useCallback(() => setRetryToken((t) => t + 1), []);
+  const [pending, setPending] = useState(false);
+  const pendingTimeoutRef = useRef(null);
+
+  // Peers get no direct request/response for an action - just whatever the
+  // host broadcasts next. So "pending" here is a best-effort signal: on,
+  // the moment something's sent; off, the moment any new game state comes
+  // in (or after a few seconds regardless, in case the action was quietly
+  // rejected and never produced a new broadcast at all).
+  useEffect(() => {
+    setPending(false);
+    clearTimeout(pendingTimeoutRef.current);
+  }, [gameState]);
 
   const send = useCallback(
     (action) => {
       if (socketRef.current?.readyState !== WebSocket.OPEN) {
         return { ok: false, error: "Not connected to the host" };
       }
+      setPending(true);
+      clearTimeout(pendingTimeoutRef.current);
+      pendingTimeoutRef.current = setTimeout(() => setPending(false), 4000);
       socketRef.current.send(JSON.stringify({ type: "ACTION", playerId, action }));
       return { ok: true };
     },
@@ -84,6 +99,7 @@ export function useLanPeer(hostUrl, playerId, name) {
     playerNames,
     mySeat: me?.seatIndex ?? null,
     isHost: false,
+    pending,
     selectWord, readyToGuess, guessLetter, judgeVote, judgeDecide, nextRound,
     restart: () => {}, // only the host can restart; peers just wait (see Scoreboard's isHost)
   };

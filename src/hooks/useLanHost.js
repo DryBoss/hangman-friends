@@ -179,6 +179,7 @@ export function useLanHost(hostPlayerId, hostName, settings) {
     playerNames,
     mySeat: hostSeat,
     isHost: true,
+    pending: false,
     selectWord, readyToGuess, guessLetter, judgeVote, judgeDecide, nextRound, restart,
   };
 }

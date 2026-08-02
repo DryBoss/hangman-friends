@@ -53,6 +53,49 @@ npm run dev
 Local mode and Local Network mode don't need any of this - they work with
 no Supabase project configured at all.
 
+## Automating Supabase deploys from GitHub
+
+Use Supabase's own **native GitHub integration** rather than a custom
+GitHub Actions workflow - it's simpler and needs no secrets on your side.
+It's the "Connect GitHub" button you see on the project-creation screen
+(also reachable later from Project Settings > Integrations on an existing
+project). Once connected:
+
+1. Push this repo to GitHub, then click **Connect GitHub** (either during
+   project creation, or from an existing project's Integrations settings)
+   and authorize/select the repo.
+2. Set the **Supabase directory** to the repo root (where `supabase/`
+   lives) and pick `main` as the production branch.
+3. Turn on **"Deploy to production"** in the integration's configuration -
+   without it, pushes only run against preview branches, not your real
+   project.
+
+From then on, every push to `main` runs Supabase's own pipeline: it pulls
+migrations from `supabase/migrations/`, applies them, and deploys any
+edge function declared in `supabase/config.toml` (already set up here for
+`apply-action`). No access token, no repo secrets, nothing to configure
+on the GitHub side at all.
+
+**One thing to update first**: open `supabase/config.toml` and replace
+`project_id = "your-project-ref"` with your actual project ref (the id in
+your dashboard URL, `supabase.com/dashboard/project/<this-part>`) - the
+integration needs that to know which project a push deploys to.
+
+If you'd rather trigger deploys manually or from your own CI instead of
+Supabase's integration, the equivalent CLI commands are:
+```bash
+npx supabase login
+npx supabase link --project-ref your-project-ref
+npx supabase db push
+npx supabase functions deploy apply-action
+```
+
+Note this only covers the Supabase side. It doesn't touch the web app
+itself - if you deploy the frontend to Netlify (as mentioned in your
+other projects) or similar, that's a separate, already-automatic
+git-push-to-deploy pipeline through that host, unrelated to Supabase's
+integration.
+
 ## Turning this into an Android app
 
 Already Capacitor-ready. Needs the Android SDK, so run this on your own
@@ -99,9 +142,16 @@ version bump).
   server. That's an acceptable tradeoff for a local trusted-network party
   game, but worth knowing it's there.
 - **Deep link scheme**: `hangmanfriends://join?ip=...&port=...` is
-  registered in the manifest so a scanned join QR code can open the app
-  directly to a pre-filled join screen. Test this specifically - deep
-  link intent-filter behavior varies across Android versions/OEM skins.
+  registered in the manifest, and the LAN join screen has an in-app QR
+  scanner (`@capacitor-mlkit/barcode-scanning`) rather than relying on the
+  phone's stock camera app to recognize and open a custom URL scheme -
+  that behavior is inconsistent across Android versions/OEM camera apps,
+  so scanning happens inside this app instead, where the result is fully
+  under our control. The deep link is still registered as a secondary
+  path (in case someone taps a shared link directly, e.g. from a chat
+  app), and `parseConnectString.js` accepts either format. Needs Gradle to
+  pull in the ML Kit dependency and a camera-permission grant on first
+  scan - both worth testing specifically on a real device.
 
 ## How it's structured
 
@@ -150,6 +200,29 @@ players aren't looking at the same screen - see `RoundJudge.jsx`'s
 `isLocalMode` prop for the UI split, and `AUTO_ADVANCE_JUDGE` in the
 engine for what happens if someone never votes (missing votes count as
 approve, so one AFK player can't stall a round forever).
+
+### Loading feedback and disconnect handling (online mode)
+
+Every user-initiated action (`useGameActions`' `sendAction`) tracks a
+`pending` flag for the round trip to the edge function - `Gameplay.jsx`
+and each phase's component (word entry, ready button, letter keys, judge
+vote, continue) use it to disable themselves and show a "Sending…" state
+rather than looking like the tap did nothing. The turn-deadline watchdog's
+own background polling uses a separate `sendSystemAction` path that
+doesn't touch this flag - the user didn't do anything, so nothing should
+visibly react to it.
+
+That same background polling is also what lets a disconnected player's
+turn get skipped early instead of waiting out their full timer: every ~8s,
+any connected client asks the edge function to advance the current phase;
+almost always it's rejected ("not timed out yet"), but the edge function
+also independently checks the real `last_seen` heartbeat of whoever's turn
+it is against the players table (see `PRESENCE_STALE_MS` in the shared
+engine) and allows the advance early if they've gone quiet for ~40s. A
+client can't fake this - it's the server's own view of the heartbeat that
+decides, not anything the requesting client claims. This only applies to
+select/pass/guess (phases with one specific "active" player); judge phase
+keeps its plain 45s deadline since there's no single seat to check there.
 
 ### Known limitations (v1)
 

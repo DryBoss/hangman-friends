@@ -6,7 +6,7 @@ import Icon from "./../icon/Icon";
 // ready, here we go" is still worth keeping, so the player about to guess
 // sees a "your turn" card with a ready button, and everyone else sees the
 // same card without one, just waiting.
-function TurnHandoff({ playerName, subtitle, isMe, onReady }) {
+function TurnHandoff({ playerName, subtitle, isMe, onReady, pending = false }) {
   return (
     <div className={styles.passDevice}>
       <div className={`card ${styles.panel}`}>
@@ -17,8 +17,8 @@ function TurnHandoff({ playerName, subtitle, isMe, onReady }) {
         <h2 className={styles.name}>{playerName}</h2>
         {subtitle ? <p className={styles.subtitle}>{subtitle}</p> : null}
         {isMe ? (
-          <button className={styles.readyButton} onClick={onReady}>
-            I'm Ready
+          <button className={styles.readyButton} onClick={onReady} disabled={pending}>
+            {pending ? "Sending…" : "I'm Ready"}
           </button>
         ) : (
           <p className={styles.subtitle}>Waiting for {playerName} to get ready…</p>

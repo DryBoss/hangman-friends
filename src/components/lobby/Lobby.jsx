@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import QRCode from "qrcode";
 import styles from "./Lobby.module.css";
 import Icon from "./../icon/Icon";
 import { supabase } from "./../../lib/supabaseClient";
@@ -26,6 +27,7 @@ function Lobby({ roomCode, playerId, onGameStarted, onLeave }) {
   const { startGame, error } = useGameActions(roomCode, playerId);
   const [copied, setCopied] = useState(false);
   const [starting, setStarting] = useState(false);
+  const [qrDataUrl, setQrDataUrl] = useState(null);
 
   const ordered = useMemo(() => sortedPlayers(players), [players]);
   const isHost = me?.is_host ?? false;
@@ -34,6 +36,16 @@ function Lobby({ roomCode, playerId, onGameStarted, onLeave }) {
   useEffect(() => {
     if (gameStarted) onGameStarted();
   }, [gameStarted, onGameStarted]);
+
+  useEffect(() => {
+    let cancelled = false;
+    QRCode.toDataURL(shareLink(roomCode), { margin: 1, width: 220 })
+      .then((dataUrl) => !cancelled && setQrDataUrl(dataUrl))
+      .catch(() => !cancelled && setQrDataUrl(null));
+    return () => {
+      cancelled = true;
+    };
+  }, [roomCode]);
 
   if (loading) {
     return <div className={styles.lobby}><p className={styles.loadingText}>Loading room…</p></div>;
@@ -103,6 +115,13 @@ function Lobby({ roomCode, playerId, onGameStarted, onLeave }) {
         </div>
         {copied ? <p className={styles.copiedNote}>Link copied!</p> : null}
       </div>
+
+      {qrDataUrl ? (
+        <div className={`card ${styles.panel}`} style={{ alignItems: "center" }}>
+          <img src={qrDataUrl} alt="Scan to join" width={180} height={180} />
+          <p className={styles.hint}>Or scan this from another phone's camera</p>
+        </div>
+      ) : null}
 
       <div className={`card ${styles.panel}`}>
         <p className={styles.sectionLabel}>

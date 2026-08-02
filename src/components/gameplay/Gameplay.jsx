@@ -18,7 +18,7 @@ import styles from "./Gameplay.module.css";
 // this exact same UI.
 function Gameplay({ adapter, onNewGame }) {
   const {
-    loading, state, playerNames, mySeat, isHost, isLocalMode,
+    loading, state, playerNames, mySeat, isHost, isLocalMode, pending,
     selectWord, readyToGuess, guessLetter, judgeVote, judgeDecide, nextRound, restart,
   } = adapter;
 
@@ -81,6 +81,7 @@ function Gameplay({ adapter, onNewGame }) {
             minLength={minWordLength}
             maxLength={maxWordLength}
             onSelectWord={selectWord}
+            pending={pending}
           />
           {leaderboardDialog}
         </>
@@ -109,6 +110,7 @@ function Gameplay({ adapter, onNewGame }) {
           isFirstGuesser ? "You'll be the first to guess this word." : "Your turn to guess a letter."
         }
         onReady={readyToGuess}
+        pending={pending}
       />
     );
   }
@@ -127,6 +129,7 @@ function Gameplay({ adapter, onNewGame }) {
             turnSeq={turnSeq}
             onGuess={guessLetter}
             onTimeUp={() => {}} // the turn-deadline watchdog handles the timeout, not the client component
+            pending={pending}
           />
         ) : (
           <GuessSpectator
@@ -153,6 +156,7 @@ function Gameplay({ adapter, onNewGame }) {
         myVote={mySeat != null ? judgeVotes[mySeat] ?? null : null}
         onVote={isLocalMode ? judgeDecide : judgeVote}
         isLocalMode={isLocalMode}
+        pending={pending}
       />
     );
   }
@@ -194,8 +198,8 @@ function Gameplay({ adapter, onNewGame }) {
         <p className={styles.leaderboardLabel}>Standings</p>
         <Leaderboard players={playerNames} score={score} />
 
-        <button className={styles.continueButton} onClick={nextRound}>
-          Continue
+        <button className={styles.continueButton} onClick={nextRound} disabled={pending}>
+          {pending ? "Sending…" : "Continue"}
         </button>
       </div>
     </div>
